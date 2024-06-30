@@ -1,22 +1,35 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogHeader,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { DialogHeader } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { FormEvent, useState } from "react";
+import { useAppDispatch } from "../../redux/hook";
+import { AddTodo } from "@/redux/features/todoSlice";
 
 const AddTodoModal = () => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+  const dispatch = useAppDispatch();
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log(task, description);
+
+    const id = Math.random().toString(36).substring(2, 7);
+    const taskDetails = {
+      id: id,
+      title: task,
+      description: description,
+    };
+    dispatch(AddTodo(taskDetails));
+    console.log(taskDetails);
   };
 
   return (
@@ -45,7 +58,7 @@ const AddTodoModal = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
+            <Label htmlFor="description" className="text-right">
               Description
             </Label>
             <Input
@@ -55,7 +68,9 @@ const AddTodoModal = () => {
             />
           </div>
           <div className="flex justify-end">
-            <Button type="submit">Save task</Button>
+            <DialogClose asChild>
+              <Button type="submit">Save task</Button>
+            </DialogClose>
           </div>
         </form>
       </DialogContent>
