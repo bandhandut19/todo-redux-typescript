@@ -3,7 +3,9 @@ import Todo from "./pages/Todo";
 function App() {
   return (
     <>
-      <Todo></Todo>
+      <div className="px-10">
+        <Todo></Todo>
+      </div>
     </>
   );
 }

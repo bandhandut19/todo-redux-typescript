@@ -1,35 +1,59 @@
+import { useUpdateTodoMutation } from "@/redux/api/api";
 import { Button } from "../ui/button";
-import { useAppDispatch } from "../../redux/hook";
-import { RemoveTodo, ToggleComplete } from "@/redux/features/todoSlice";
+// import { useAppDispatch } from "../../redux/hook";
+// import { RemoveTodo } from "@/redux/features/todoSlice";
 
 type TTodoCardProps = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
+  priority: string;
   isCompleted?: boolean;
 };
-const TodoCard = ({ title, description, id, isCompleted }: TTodoCardProps) => {
-  const dispatch = useAppDispatch();
+const TodoCard = ({
+  title,
+  description,
+  _id,
+  isCompleted,
+  priority,
+}: TTodoCardProps) => {
+  // const dispatch = useAppDispatch();
+  const [updateTodo] = useUpdateTodoMutation();
+  const handleToggle = () => {
+    const options = {
+      id: _id,
+      data: {
+        title: title,
+        isCompleted: !isCompleted,
+        description,
+        priority,
+      },
+    };
+    updateTodo(options);
+  };
   return (
     <div className="bg-white rounded-lg flex justify-between p-3 items-center border">
       <input
-        onChange={() => dispatch(ToggleComplete(id))}
+        className="mr-3"
+        onChange={handleToggle}
         type="checkbox"
         name="complete"
         id="complete"
+        defaultChecked={isCompleted}
       />
-      <p className="font-semibold">{title}</p>
-      {/* <p>created at</p> */}
-      <p>{description}</p>
+      <p className="font-semibold flex-1">{title}</p>
+
+      <p className="flex-[1]">{priority}</p>
+      <p className="flex-[2]">{description}</p>
       {isCompleted ? (
-        <p className="text-green-500 font-semibold">Done</p>
+        <p className="text-green-500 font-semibold flex-1">Done</p>
       ) : (
-        <p className="text-red-500 font-semibold">Pending</p>
+        <p className="text-red-500 font-semibold flex-1">Pending</p>
       )}
       <div className="space-x-4">
         <Button className="bg-red-500 hover:bg-red-500">
           <svg
-            onClick={() => dispatch(RemoveTodo(id))}
+            // onClick={}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
